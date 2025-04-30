@@ -6,13 +6,13 @@ import { DashBoardSideBar } from "../components/DashboardSideBar";
 
 function Dashboard() {
   return (
-    <div className="min-h-screen bg-white w-screen flex">
+    <div className="flex h-screen w-screen overflow-hidden">
       {/* Sidebar */}
-      <div className="w-56 flex-shrink-0">
+      <div className="w-56 flex-shrink-0 flex flex-col">
         <div className="p-4">
-          <img src={logo} alt="Free Shops Logo" className="h-15 mr-4" />
+          <img src={logo} alt="Free Shops Logo" className="h-12 mr-4" />
         </div>
-        <div className="ml-2 mr-1">
+        <div className="flex-1 overflow-y-auto scrollbar-hide">
           <DashBoardSideBar />
         </div>
       </div>
@@ -20,12 +20,12 @@ function Dashboard() {
       {/* Right content area */}
       <div className="flex-1 flex flex-col">
         {/* Navbar */}
-        <div className="sticky top-0 z-50">
+        <div className="flex-shrink-0">
           <Navbar />
         </div>
 
-        {/* Main content */}
-        <div className="flex-1 bg-blue-50 p-4 overflow-y-auto">
+        {/* Main content with its own scroll */}
+        <div className="flex-1 overflow-y-auto bg-blue-50 p-4">
           <Outlet />
         </div>
       </div>

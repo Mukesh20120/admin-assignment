@@ -4,43 +4,74 @@ import {
     SidebarItemGroup,
     SidebarItems,
   } from "flowbite-react";
-  import {
-    HiArrowSmRight,
-    HiChartPie,
-    HiInbox,
-    HiShoppingBag,
-    HiTable,
-    HiUser,
-    HiViewBoards,
-  } from "react-icons/hi";
-  import { FaAngleDown } from "react-icons/fa6";
-  
-  // Sidebar menu config
-  const sidebarLinks = [
-    { label: "Dashboard", href: "#", icon: HiChartPie },
-    { label: "Kanban", href: "#", icon: HiViewBoards, labelIcon: <FaAngleDown /> },
-    { label: "Inbox", href: "#", icon: HiInbox, badge: "3" },
-    { label: "Users", href: "#", icon: HiUser },
-    { label: "Products", href: "#", icon: HiShoppingBag },
-    { label: "Sign In", href: "#", icon: HiArrowSmRight },
-    { label: "Sign Up", href: "#", icon: HiTable },
-  ];
+  import { FaAngleDown,FaAngleUp } from "react-icons/fa6";
+  import { useState } from "react";
+import SideBarLinkData from "../utils/SideBarLinkData";
+
   
   export function DashBoardSideBar() {
+    const [openDropdown, setOpenDropdown] = useState(null); // which parent dropdown is open
+    const [activeParent, setActiveParent] = useState(null);
+    const [activeSubItem, setActiveSubItem] = useState(null);
+  
+    const handleParentClick = (label, hasSubItems, e) => {
+      e.preventDefault();
+      if (hasSubItems) {
+        setOpenDropdown(openDropdown === label ? null : label);
+      } else {
+        setOpenDropdown(null);
+        setActiveParent(label);
+        setActiveSubItem(null);
+      }
+    };
+  
+    const handleSubItemClick = (parentLabel, subLabel) => {
+      setActiveParent(parentLabel);
+      setActiveSubItem(subLabel);
+      setOpenDropdown(null);
+    };
+  
     return (
-      <Sidebar aria-label="Dashboard Sidebar" className="bg-white">
+      <Sidebar aria-label="Dashboard Sidebar" className="bg-white relative">
         <SidebarItems>
           <SidebarItemGroup>
-            {sidebarLinks.map(({ label, href, icon, badge, labelIcon }) => (
-              <SidebarItem
-                key={label}
-                href={href}
-                icon={icon}
-                label={badge || labelIcon}
-                labelColor={badge ? "dark" : undefined}
-              >
-                {label}
-              </SidebarItem>
+            {SideBarLinkData.map(({ label, href, icon, subItems }) => (
+              <div key={label} className="relative">
+                <SidebarItem
+                  href={href}
+                  icon={icon}
+                  onClick={(e) => handleParentClick(label, !!subItems, e)}
+                  className={`${
+                    activeParent === label ? "bg-gray-200 font-semibold" : ""
+                  }`}
+                  label={subItems && (openDropdown?<FaAngleUp/>:<FaAngleDown />)}
+                >
+                  {label}
+                </SidebarItem>
+  
+                {/* Submenu dropdown */}
+                {subItems && openDropdown === label && (
+                  <div className="absolute w-full left-0 top-full bg-white rounded shadow z-50 py-1">
+                    {subItems.map((item) => (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSubItemClick(label, item.label);
+                        }}
+                        className={`block px-4 py-2 text-sm hover:bg-gray-200 ${
+                          activeSubItem === item.label
+                            ? "bg-gray-200 font-semibold"
+                            : ""
+                        }`}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </SidebarItemGroup>
         </SidebarItems>
