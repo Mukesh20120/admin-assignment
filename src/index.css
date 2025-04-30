@@ -1,6 +1,11 @@
 @import "tailwindcss";
-@plugin "flowbite-react/plugin/tailwindcss";
-@source "../.flowbite-react/class-list.json";
+:root{
+  --btn-del-text: #F80036;
+  --btn-del-bg: #F93C65;
+  --btn-edit-text:#00B69B;
+  --btn-edit-bg: #00B69B;
+  --hover-btn: #199FB1;
+}
 
 .scrollbar-hide::-webkit-scrollbar {
     display: none;

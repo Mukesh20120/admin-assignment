@@ -25,7 +25,7 @@ function Dashboard() {
         </div>
 
         {/* Main content with its own scroll */}
-        <div className="flex-1 overflow-y-auto bg-blue-50 p-4">
+        <div className="flex-1 overflow-y-auto bg-blue-50 px-6">
           <Outlet />
         </div>
       </div>

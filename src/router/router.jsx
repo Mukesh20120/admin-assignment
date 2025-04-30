@@ -4,6 +4,7 @@ import LoginPage from "../pages/loginPage";
 import ForgetPage from "../pages/forgetPage";
 import PageNotFound from "../pages/pageNotFound";
 import Dashboard from "../pages/Dashboard";
+import DashBoardArticle from "../components/DashBoardArticle";
 
 
 const router = createBrowserRouter([
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Dashboard/>,
     children: [
+      {path: 'article', element: <DashBoardArticle/>},
       {path: 'profile', element: <div>Profile</div>},
       {path: 'blog', element: <div>Profile</div>},
       {path: 'users', element: <div>Profile</div>},

@@ -18,12 +18,12 @@ import {
   } from "react-icons/hi";
   
   const SideBarLinkData = [
-    { label: "Dashboard", href: "#", icon: HiChartPie },
-    { label: "Article", href: "#", icon: HiDocumentText },
-    { label: "Auto Dealership", href: "#", icon: HiShoppingBag },
+    { label: "Dashboard", href: "#", Icon: HiChartPie },
+    { label: "Article", href: "article", Icon: HiDocumentText },
+    { label: "Auto Dealership", href: "#", Icon: HiShoppingBag },
     {
       label: "Blog",
-      icon: HiDocumentText,
+      Icon: HiDocumentText,
       subItems: [
         { label: "Blog Category", href: "#" },
         { label: "Blog Page", href: "#" },
@@ -32,18 +32,18 @@ import {
     },
     {
       label: "Career",
-      icon: HiBriefcase,
+      Icon: HiBriefcase,
       subItems: [
         { label: "Career", href: "#" },
         { label: "Career Openings", href: "#" },
         { label: "Career Opening Category", href: "#" },
       ],
     },
-    { label: "Country, State, City", href: "#", icon: HiGlobeAlt },
-    { label: "FAQ's", href: "#", icon: HiQuestionMarkCircle },
+    { label: "Country, State, City", href: "#", Icon: HiGlobeAlt },
+    { label: "FAQ's", href: "#", Icon: HiQuestionMarkCircle },
     {
       label: "Free Shop News",
-      icon: HiNewspaper,
+      Icon: HiNewspaper,
       subItems: [
         { label: "Free Shop News Category", href: "#" },
         { label: "Free Shop News", href: "#" },
@@ -51,7 +51,7 @@ import {
     },
     {
       label: "Help Center",
-      icon: HiInformationCircle,
+      Icon: HiInformationCircle,
       subItems: [
         { label: "Category", href: "#" },
         { label: "Help Center Knowledge Base", href: "#" },
@@ -59,7 +59,7 @@ import {
     },
     {
       label: "How It Works",
-      icon: HiDocumentText,
+      Icon: HiDocumentText,
       subItems: [
         { label: "Add How Its Work", href: "#" },
         { label: "Add Bottom Data in HW", href: "#" },
@@ -67,7 +67,7 @@ import {
     },
     {
       label: "Jobs",
-      icon: HiBriefcase,
+      Icon: HiBriefcase,
       subItems: [
         { label: "Service Category", href: "#" },
         { label: "Jobs", href: "#" },
@@ -75,7 +75,7 @@ import {
     },
     {
       label: "Press",
-      icon: HiNewspaper,
+      Icon: HiNewspaper,
       subItems: [
         { label: "Press News Category", href: "#" },
         { label: "Press Topic", href: "#" },
@@ -86,7 +86,7 @@ import {
     },
     {
       label: "Product",
-      icon: HiCube,
+      Icon: HiCube,
       subItems: [
         { label: "Category", href: "#" },
         { label: "Subcategory", href: "#" },
@@ -96,19 +96,19 @@ import {
         { label: "Model", href: "#" },
       ],
     },
-    { label: "Privacy & Terms", href: "#", icon: HiDocumentText },
+    { label: "Privacy & Terms", href: "#", Icon: HiDocumentText },
     {
       label: "Trust & Safety",
-      icon: HiShieldCheck,
+      Icon: HiShieldCheck,
       subItems: [
         { label: "Add", href: "#" },
         { label: "Add Button Data", href: "#" },
         { label: "List", href: "#" },
       ],
     },
-    { label: "User Management", href: "#", icon: HiUser },
-    { label: "Order", href: "#", icon: HiShoppingBag },
-    { label: "Settings", href: "#", icon: HiCog },
+    { label: "User Management", href: "#", Icon: HiUser },
+    { label: "Order", href: "#", Icon: HiShoppingBag },
+    { label: "Settings", href: "#", Icon: HiCog },
   ];
   
   export default SideBarLinkData;
