@@ -8,7 +8,7 @@ function Dashboard() {
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       {/* Sidebar */}
-      <div className="w-56 flex-shrink-0 flex flex-col">
+      <div className="w-56 flex-shrink-0 flex flex-col shadow-[2px_0_10px_rgba(0,0,0,0.3)] bg-white">
         <div className="p-4">
           <img src={logo} alt="Free Shops Logo" className="h-12 mr-4" />
         </div>
@@ -25,7 +25,8 @@ function Dashboard() {
         </div>
 
         {/* Main content with its own scroll */}
-        <div className="flex-1 overflow-y-auto bg-blue-50 px-6">
+        <div className="flex-1 overflow-y-auto px-6">
+       
           <Outlet />
         </div>
       </div>
