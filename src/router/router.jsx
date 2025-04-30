@@ -1,0 +1,31 @@
+import { createBrowserRouter } from "react-router";
+import App from "../App";
+import LoginPage from "../pages/loginPage";
+import ForgetPage from "../pages/forgetPage";
+import PageNotFound from "../pages/pageNotFound";
+import Dashboard from "../pages/Dashboard";
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { path: "/login", element: <LoginPage /> },
+      { path: "/forget", element: <ForgetPage /> },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard/>,
+    children: [
+      {path: 'profile', element: <div>Profile</div>},
+      {path: 'blog', element: <div>Profile</div>},
+      {path: 'users', element: <div>Profile</div>},
+      {path: 'setting', element: <div>Profile</div>},
+    ]
+  },
+  { path: "*", element: <PageNotFound /> },
+]);
+
+export default router;
