@@ -40,7 +40,7 @@ const articlesApi = createApi({
     }),
     addArticle: builder.mutation({
       query: (newArticle) => ({
-        url: "/",
+        url: "/createArticle",
         method: "POST",
         body: newArticle,
       }),
@@ -59,7 +59,7 @@ const articlesApi = createApi({
     }),
     deleteArticle: builder.mutation({
       query: (id) => ({
-        url: `/${id}`,
+        url: `/deleteArticle/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Articles"],

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import useModal from "../customHooks/useModal";
 import { FiCamera } from "react-icons/fi";
 import { Modal } from "./Modal";
-import { useGetArticlesQuery } from "../store/features/articleApi";
+import {
+  useAddArticleMutation,
+  useDeleteArticleMutation,
+  useGetArticlesQuery,
+} from "../store/features/articleApi";
 import Pagination from "./Pagination";
-// import { dummyArticleData } from "../utils/dummyData";
 
 export default function DashBoardArticle() {
   const [page, setPage] = useState(1);
@@ -16,18 +18,14 @@ export default function DashBoardArticle() {
     page,
     limit,
   });
-
+  const [addArticle] = useAddArticleMutation();
+  const [deleteArticle] = useDeleteArticleMutation();
   const {
     hasNextPage = false,
     hasPrevPage = false,
     totalDocs: totalArticles = 0,
     docs: articles = [],
   } = data?.data || {};
-
-  // const start = (page - 1) * limit + 1;
-  // const end = Math.min(page * limit, totalArticles);
-
-  // console.log(data?.data,isLoading,error,articles);
 
   const [isOpen, setOpen, setClose] = useModal();
 
@@ -61,24 +59,42 @@ export default function DashBoardArticle() {
   };
 
   // Form submit handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.description || !formData.image) {
       alert("Please fill all fields!");
       return;
     }
 
-    console.log(formData);
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("image", formData.image);
+    try {
+      await addArticle(formDataToSend).unwrap();
+      // console.log('article submited', data);
+    } catch (error) {
+      console.log("Article not submit fail", error);
+    } finally {
+      // Reset form
+      setFormData({
+        title: "",
+        description: "",
+        image: null,
+        previewImage: null,
+      });
+      setClose();
+    }
+  };
 
-    // Reset form
-    setFormData({
-      title: "",
-      description: "",
-      image: null,
-      previewImage: null,
-    });
-
-    setClose();
+  //delete handler
+  const handleDelete = async (id) => {
+    try {
+      await deleteArticle(id).unwrap();
+      console.log('delete successfully');
+    } catch (error) {
+      console.log("Delete fail", error);
+    }
   };
 
   return (
@@ -210,7 +226,12 @@ export default function DashBoardArticle() {
                   <button className="mx-1 bg-green-200 text-[var(--btn-edit-text)] px-3 py-1 rounded-lg">
                     Edit
                   </button>
-                  <button className="mx-1 bg-red-200 text-[var(--btn-del-text)] px-2 py-1 rounded-xl">
+                  <button
+                    onClick={() => {
+                      handleDelete(article._id);
+                    }}
+                    className="mx-1 bg-red-200 text-[var(--btn-del-text)] px-2 py-1 rounded-xl"
+                  >
                     Delete
                   </button>
                 </td>
@@ -221,32 +242,6 @@ export default function DashBoardArticle() {
       </div>
 
       {/* Pagination */}
-      {/* <div className="flex justify-between items-center my-4">
-        <p className="block text-sm text-gray-700">
-          Showing {totalArticles === 0 ? 0 : `${start} - ${end}`} of {totalArticles}
-        </p>
-
-        <div className="flex justify-center items-center gap-1">
-          <button
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            disabled={!hasPrevPage}
-            className={`p-2 rounded bg-white border text-gray-600 hover:bg-gray-200 ${
-              !hasPrevPage ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            <FaAngleLeft />
-          </button>
-          <button
-            onClick={() => setPage((prev) => prev + 1)}
-            disabled={!hasNextPage}
-            className={`p-2 rounded bg-white border text-gray-600 hover:bg-gray-200 ${
-              !hasNextPage ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            <FaAngleRight />
-          </button>
-        </div>
-      </div> */}
       <Pagination
         currentPage={page}
         limit={limit}
