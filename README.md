@@ -1,12 +1,69 @@
-# React + Vite
+---
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### 🚀 Project Setup Instructions
 
-Currently, two official plugins are available:
+Follow the steps below to set up and run the project:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+### 1. **Create a `.env` File**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Inside the `admin` folder, create a `.env` file.
+- Copy the contents from `env.example` and paste them into the `.env` file.
+- Make sure to update any required environment variable values if needed.
+
+---
+
+### 2. **Install Dependencies**
+
+Open your terminal, navigate to the `admin` folder, and run:
+
+```bash
+npm install
+```
+
+This will install all the required packages for the project.
+
+---
+
+### 3. **Start the Development Server**
+
+Once installation is complete, run:
+
+```bash
+npm run dev
+```
+
+This will start the local development server. You can access the app in your browser at the provided local URL (usually `http://localhost:3000` or similar).
+
+---
+
+### 4. **Login Credentials**
+
+To log in, use the following credentials:
+
+- **Email:** `admin@gmail.com`  
+- **Password:** (Use the one provided or check the backend config)
+
+---
+
+### 5. **Available Screens in the Admin Panel**
+
+After logging in, you will have access to the following pages:
+
+1. **Login Page**  
+   - The initial screen where you sign in using the provided credentials.
+
+2. **Article Management**  
+   - View, create, edit, or delete articles.
+
+3. **User Management**  
+   - Manage user accounts and related settings.
+
+4. **Career**  
+   - Manage career-related content or postings.
+
+5. **Jobs** → **Jobs List**  
+   - View and manage job postings in a nested `Jobs` section.
+
+---

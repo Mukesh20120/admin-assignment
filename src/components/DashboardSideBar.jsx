@@ -33,7 +33,7 @@ export function DashBoardSideBar() {
           <button
             onClick={(e) => handleParentClick(label, !!subItems, e, href)}
             className={`${
-              activeParent === label ? "bg-[var(--hover-btn)] font-semibold" : ""
+              activeParent === label ? "bg-[var(--hover-btn)] " : ""
             } flex justify-between items-center px-2 hover:bg-[var(--hover-btn)] cursor-pointer rounded-xl my-2 py-2 w-full text-left`}
           >
             <div className="flex items-center gap-3">
