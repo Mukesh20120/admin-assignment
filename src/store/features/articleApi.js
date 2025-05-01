@@ -48,7 +48,7 @@ const articlesApi = createApi({
     }),
     updateArticle: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/${id}`,
+        url: `/updateArticle/${id}`,
         method: "PUT",
         body: data,
         headers: {

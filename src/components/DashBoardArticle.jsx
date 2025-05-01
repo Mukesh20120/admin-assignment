@@ -7,6 +7,7 @@ import {
   useAddArticleMutation,
   useDeleteArticleMutation,
   useGetArticlesQuery,
+  useUpdateArticleMutation,
 } from "../store/features/articleApi";
 import Pagination from "./Pagination";
 
@@ -19,6 +20,7 @@ export default function DashBoardArticle() {
     limit,
   });
   const [addArticle] = useAddArticleMutation();
+  const [updateArticle] = useUpdateArticleMutation();
   const [deleteArticle] = useDeleteArticleMutation();
   const {
     hasNextPage = false,
@@ -36,6 +38,7 @@ export default function DashBoardArticle() {
     image: null,
     previewImage: null,
   });
+  const [articleId, setArticleId] = useState(null);
 
   // Generic input handler
   const handleInputChange = (e) => {
@@ -66,24 +69,23 @@ export default function DashBoardArticle() {
       return;
     }
 
-    const formDataToSend = new FormData();
-    formDataToSend.append("title", formData.title);
-    formDataToSend.append("description", formData.description);
-    formDataToSend.append("image", formData.image);
     try {
-      await addArticle(formDataToSend).unwrap();
+      if (articleId) {
+        const { title = "", description = "" } = formData;
+        await updateArticle({ id: articleId, data: { title, description } });
+        console.log("update successfully");
+      } else {
+        const formDataToSend = new FormData();
+        formDataToSend.append("title", formData.title);
+        formDataToSend.append("description", formData.description);
+        formDataToSend.append("image", formData.image);
+        await addArticle(formDataToSend).unwrap();
+      }
       // console.log('article submited', data);
     } catch (error) {
       console.log("Article not submit fail", error);
     } finally {
-      // Reset form
-      setFormData({
-        title: "",
-        description: "",
-        image: null,
-        previewImage: null,
-      });
-      setClose();
+     handleOnclose();
     }
   };
 
@@ -91,11 +93,30 @@ export default function DashBoardArticle() {
   const handleDelete = async (id) => {
     try {
       await deleteArticle(id).unwrap();
-      console.log('delete successfully');
+      console.log("delete successfully");
     } catch (error) {
       console.log("Delete fail", error);
     }
   };
+
+  //handle edit
+  const handleEdit = (article) => {
+    const { _id, title="", description="", image="" } = article;
+    setArticleId(_id);
+    setFormData({ title, description, image, previewImage: image });
+    setOpen();
+  };
+
+  const handleOnclose = ()=>{
+    setFormData({
+      title: "",
+      description: "",
+      image: null,
+      previewImage: null,
+    });
+    setArticleId(null);
+    setClose();
+  }
 
   return (
     <>
@@ -114,7 +135,7 @@ export default function DashBoardArticle() {
         </div>
       </div>
       {/* update & add modal */}
-      <Modal isOpen={isOpen} onClose={setClose} header={"Article"}>
+      <Modal isOpen={isOpen} onClose={handleOnclose} header={"Article"}>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center space-y-3">
             {/* Hidden file input */}
@@ -223,7 +244,12 @@ export default function DashBoardArticle() {
                     : article.description}
                 </td>
                 <td className="px-4 py-2 text-cyan-600 hover:underline cursor-pointer">
-                  <button className="mx-1 bg-green-200 text-[var(--btn-edit-text)] px-3 py-1 rounded-lg">
+                  <button
+                    className="mx-1 bg-green-200 text-[var(--btn-edit-text)] px-3 py-1 rounded-lg"
+                    onClick={() => {
+                      handleEdit(article);
+                    }}
+                  >
                     Edit
                   </button>
                   <button
