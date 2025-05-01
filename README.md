@@ -8,7 +8,7 @@ Follow the steps below to set up and run the project:
 
 ### 1. **Create a `.env` File**
 
-- Inside the `admin` folder, create a `.env` file.
+- create a `.env` file.
 - Copy the contents from `env.example` and paste them into the `.env` file.
 - Make sure to update any required environment variable values if needed.
 
@@ -16,7 +16,7 @@ Follow the steps below to set up and run the project:
 
 ### 2. **Install Dependencies**
 
-Open your terminal, navigate to the `admin` folder, and run:
+Open your terminal, and run:
 
 ```bash
 npm install
@@ -34,7 +34,7 @@ Once installation is complete, run:
 npm run dev
 ```
 
-This will start the local development server. You can access the app in your browser at the provided local URL (usually `http://localhost:3000` or similar).
+This will start the local development server. You can access the app in your browser at the provided local URL (usually `http://localhost:5173` or similar).
 
 ---
 
