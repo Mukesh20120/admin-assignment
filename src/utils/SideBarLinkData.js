@@ -106,7 +106,7 @@ import {
         { label: "List", href: "#" },
       ],
     },
-    { label: "User Management", href: "#", Icon: HiUser },
+    { label: "User Management", href: "users", Icon: HiUser },
     { label: "Order", href: "#", Icon: HiShoppingBag },
     { label: "Settings", href: "#", Icon: HiCog },
   ];

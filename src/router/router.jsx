@@ -7,6 +7,7 @@ import Dashboard from "../pages/Dashboard";
 import DashBoardArticle from "../components/DashBoardArticle";
 import AdminRoute from "./AdminRouter";
 import DashBoardCareer from "../components/DashBoardCareer";
+import DashBoardUserManagement from "../components/DashBoardUserManagement";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,14 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <DashBoardCareer />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "users",
+        element: (
+          <AdminRoute>
+           <DashBoardUserManagement/>
           </AdminRoute>
         ),
       },
