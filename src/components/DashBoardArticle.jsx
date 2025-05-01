@@ -4,26 +4,30 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import useModal from "../customHooks/useModal";
 import { FiCamera } from "react-icons/fi";
 import { Modal } from "./Modal";
+import { useGetArticlesQuery } from "../store/features/articleApi";
+import Pagination from "./Pagination";
+// import { dummyArticleData } from "../utils/dummyData";
 
 export default function DashBoardArticle() {
-  const products = [
-    {
-      id: 1,
-      imageUrl:
-        "https://images.unsplash.com/photo-1745874205062-61affe8093f4?w=600&auto=format&fit=crop&q=60",
-      title: "Wireless Headphones and earphone",
-      description:
-        "Experience the next level of audio clarity with our premium wireless headphones. Designed for comfort and built for durability, these headphones deliver rich, immersive sound whether you're listening to music, catching up on podcasts, or taking important calls on the go.",
-    },
-    {
-      id: 2,
-      imageUrl:
-        "https://images.unsplash.com/photo-1745874205062-61affe8093f4?w=600&auto=format&fit=crop&q=60",
-      title: "Wireless Headphones and earphone (Extended)",
-      description:
-        "This is an extended description for another premium wireless headphone item. Long battery, noise-cancelling, foldable design.",
-    },
-  ];
+  const [page, setPage] = useState(1);
+  const limit = 12;
+
+  const { data } = useGetArticlesQuery({
+    page,
+    limit,
+  });
+
+  const {
+    hasNextPage = false,
+    hasPrevPage = false,
+    totalDocs: totalArticles = 0,
+    docs: articles = [],
+  } = data?.data || {};
+
+  // const start = (page - 1) * limit + 1;
+  // const end = Math.min(page * limit, totalArticles);
+
+  // console.log(data?.data,isLoading,error,articles);
 
   const [isOpen, setOpen, setClose] = useModal();
 
@@ -93,8 +97,8 @@ export default function DashBoardArticle() {
           </div>
         </div>
       </div>
-
-      <Modal isOpen={isOpen} onClose={setClose} header={'Article'}>
+      {/* update & add modal */}
+      <Modal isOpen={isOpen} onClose={setClose} header={"Article"}>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center space-y-3">
             {/* Hidden file input */}
@@ -182,25 +186,25 @@ export default function DashBoardArticle() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {products.map((product) => (
-              <tr key={product.id} className="bg-white hover:bg-gray-50">
+            {articles.map((article) => (
+              <tr key={article._id} className="bg-white hover:bg-gray-50">
                 <td className="p-4">
                   <input type="checkbox" className="w-4 h-4" />
                 </td>
                 <td>
                   <img
-                    src={product.imageUrl}
+                    src={article.image}
                     alt=""
                     className="w-16 h-16 rounded object-cover"
                   />
                 </td>
                 <td className="px-4 py-2 font-medium text-gray-900">
-                  {product.title}
+                  {article.title}
                 </td>
                 <td className="px-4 py-2">
-                  {product.description.length > 200
-                    ? product.description.slice(0, 120) + "..."
-                    : product.description}
+                  {article.description.length > 200
+                    ? article.description.slice(0, 120) + "..."
+                    : article.description}
                 </td>
                 <td className="px-4 py-2 text-cyan-600 hover:underline cursor-pointer">
                   <button className="mx-1 bg-green-200 text-[var(--btn-edit-text)] px-3 py-1 rounded-lg">
@@ -217,17 +221,40 @@ export default function DashBoardArticle() {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center my-2">
-        <p className="block">Showing 1 - 12 of 1239</p>
+      {/* <div className="flex justify-between items-center my-4">
+        <p className="block text-sm text-gray-700">
+          Showing {totalArticles === 0 ? 0 : `${start} - ${end}`} of {totalArticles}
+        </p>
+
         <div className="flex justify-center items-center gap-1">
-          <button className="p-2 bg-white text-gray-600 hover:bg-gray-300">
+          <button
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={!hasPrevPage}
+            className={`p-2 rounded bg-white border text-gray-600 hover:bg-gray-200 ${
+              !hasPrevPage ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
             <FaAngleLeft />
           </button>
-          <button className="p-2 bg-white text-gray-600 hover:bg-gray-300">
+          <button
+            onClick={() => setPage((prev) => prev + 1)}
+            disabled={!hasNextPage}
+            className={`p-2 rounded bg-white border text-gray-600 hover:bg-gray-200 ${
+              !hasNextPage ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
             <FaAngleRight />
           </button>
         </div>
-      </div>
+      </div> */}
+      <Pagination
+        currentPage={page}
+        limit={limit}
+        totalItems={totalArticles}
+        hasNextPage={hasNextPage}
+        hasPrevPage={hasPrevPage}
+        onPageChange={setPage}
+      />
     </>
   );
 }
