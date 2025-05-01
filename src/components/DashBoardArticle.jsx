@@ -13,9 +13,18 @@ import Pagination from "./Pagination";
 
 export default function DashBoardArticle() {
   const [page, setPage] = useState(1);
+  // Single form state
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    image: null,
+    previewImage: null,
+  });
+  const [articleId, setArticleId] = useState(null);
+  const [selectedArticle, setSelectedArticle] = useState([]);
   const limit = 12;
 
-  const { data } = useGetArticlesQuery({
+  const { data, isLoading } = useGetArticlesQuery({
     page,
     limit,
   });
@@ -31,15 +40,6 @@ export default function DashBoardArticle() {
 
   const [isOpen, setOpen, setClose] = useModal();
 
-  // Single form state
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    image: null,
-    previewImage: null,
-  });
-  const [articleId, setArticleId] = useState(null);
-
   // Generic input handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -47,6 +47,34 @@ export default function DashBoardArticle() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  //handle delete selected article
+  const handleDeleteSelectedArticle = async () => {
+    try {
+      await Promise.all(
+        selectedArticle.map((id) => deleteArticle(id).unwrap())
+      );
+      // console.log("delete selected successfully");
+      setSelectedArticle([]);
+    } catch (error) {
+      console.log("delete selected failed", error);
+    }
+  };
+
+  //handle select/deselect article
+  const handleSelectDeselectArticle = (id) => {
+    setSelectedArticle((prev) =>
+      prev.includes(id) ? prev.filter((preId) => preId != id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedArticle.length == articles.length) {
+      setSelectedArticle([]);
+    } else {
+      setSelectedArticle(articles.map((article) => article._id));
+    }
   };
 
   // Image file handler
@@ -85,7 +113,7 @@ export default function DashBoardArticle() {
     } catch (error) {
       console.log("Article not submit fail", error);
     } finally {
-     handleOnclose();
+      handleOnclose();
     }
   };
 
@@ -101,13 +129,13 @@ export default function DashBoardArticle() {
 
   //handle edit
   const handleEdit = (article) => {
-    const { _id, title="", description="", image="" } = article;
+    const { _id, title = "", description = "", image = "" } = article;
     setArticleId(_id);
     setFormData({ title, description, image, previewImage: image });
     setOpen();
   };
 
-  const handleOnclose = ()=>{
+  const handleOnclose = () => {
     setFormData({
       title: "",
       description: "",
@@ -116,7 +144,7 @@ export default function DashBoardArticle() {
     });
     setArticleId(null);
     setClose();
-  }
+  };
 
   return (
     <>
@@ -129,7 +157,7 @@ export default function DashBoardArticle() {
           >
             <span className="text-xl">+</span> Add new article
           </button>
-          <div className="bg-red-200 rounded">
+          <div className="bg-red-200 rounded" onClick={()=>handleDeleteSelectedArticle()}>
             <RiDeleteBinLine color="red" style={{ margin: "5px" }} size={25} />
           </div>
         </div>
@@ -214,7 +242,12 @@ export default function DashBoardArticle() {
           <thead className="bg-white shadow-xl border-b-3 border-gray-300">
             <tr>
               <th className="text-start w-[5%]">
-                <input type="checkbox" className="ml-4 w-4 h-4" />
+                <input
+                  type="checkbox"
+                  className="ml-4 w-4 h-4"
+                  checked={!isLoading && articles.length === selectedArticle.length}
+                  onChange={handleSelectAll}
+                />
               </th>
               <th className="text-left w-[5%] px-4 py-2">Image</th>
               <th className="text-left w-[20%] px-4 py-2">Title</th>
@@ -226,7 +259,12 @@ export default function DashBoardArticle() {
             {articles.map((article) => (
               <tr key={article._id} className="bg-white hover:bg-gray-50">
                 <td className="p-4">
-                  <input type="checkbox" className="w-4 h-4" />
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4"
+                    checked={selectedArticle.includes(article._id)}
+                    onChange={()=>handleSelectDeselectArticle(article._id)}
+                  />
                 </td>
                 <td>
                   <img
