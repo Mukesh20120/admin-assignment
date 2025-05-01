@@ -5,7 +5,7 @@ import ForgetPage from "../pages/forgetPage";
 import PageNotFound from "../pages/pageNotFound";
 import Dashboard from "../pages/Dashboard";
 import DashBoardArticle from "../components/DashBoardArticle";
-
+import AdminRoute from "./AdminRouter";
 
 const router = createBrowserRouter([
   {
@@ -18,14 +18,25 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Dashboard/>,
+    element: (
+      <AdminRoute>
+        <Dashboard />
+      </AdminRoute>
+    ),
     children: [
-      {path: 'article', element: <DashBoardArticle/>},
-      {path: 'profile', element: <div>Profile</div>},
-      {path: 'blog', element: <div>Profile</div>},
-      {path: 'users', element: <div>Profile</div>},
-      {path: 'setting', element: <div>Profile</div>},
-    ]
+      {
+        path: "article",
+        element: (
+          <AdminRoute>
+            <DashBoardArticle />
+          </AdminRoute>
+        ),
+      },
+      { path: "profile", element: <div>Profile</div> },
+      { path: "blog", element: <div>Profile</div> },
+      { path: "users", element: <div>Profile</div> },
+      { path: "setting", element: <div>Profile</div> },
+    ],
   },
   { path: "*", element: <PageNotFound /> },
 ]);

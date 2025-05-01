@@ -4,7 +4,7 @@ import { getBaseUrl } from "../../utils/getBaseUrl";
 const baseQuery = fetchBaseQuery({
   baseUrl: `${getBaseUrl()}/api/v1/admin/Article`,
   prepareHeaders: (headers) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }

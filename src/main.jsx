@@ -4,9 +4,12 @@ import { RouterProvider } from "react-router";
 import router from "./router/router";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </Provider>
 );
