@@ -1,0 +1,315 @@
+import React, { useState } from "react";
+import { RiDeleteBinLine } from "react-icons/ri";
+import useModal from "../customHooks/useModal";
+import { FiCamera } from "react-icons/fi";
+import { Modal } from "./Modal";
+import {
+  useGetCareerQuery,
+  useAddCareerMutation,
+  useUpdateCareerMutation,
+  useDeleteCareerMutation
+} from "../store/features/careerApi";
+import Pagination from "./Pagination";
+
+export default function DashBoardCareer() {
+  const [page, setPage] = useState(1);
+  // Single form state
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    image: null,
+    previewImage: null,
+  });
+  const [careerId, setCareerId] = useState(null);
+  const [selectedCareer, setSelectedCareer] = useState([]);
+  const limit = 12;
+
+  const { data, isLoading } = useGetCareerQuery();
+  const [addCareer] = useAddCareerMutation();
+  const [updateCareer] = useUpdateCareerMutation();
+  const [deleteCareer] = useDeleteCareerMutation();
+  
+  const {
+    hasNextPage = false,
+    hasPrevPage = false,
+    totalDocs: totalArticles = 0,
+    data: careerArray = [],
+  } = data || {};
+
+  const [isOpen, setOpen, setClose] = useModal();
+
+  // Generic input handler
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  //handle delete selected article
+  const handleDeleteSelectedArticle = async () => {
+    try {
+      await Promise.all(
+        selectedCareer.map((id) => deleteCareer(id).unwrap())
+      );
+      // console.log("delete selected successfully");
+      setSelectedCareer([]);
+    } catch (error) {
+      console.log("delete selected failed", error);
+    }
+  };
+
+  //handle select/deselect article
+  const handleSelectDeselectArticle = (id) => {
+    setSelectedCareer((prev) =>
+      prev.includes(id) ? prev.filter((preId) => preId != id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedCareer.length == careerArray.length) {
+      setSelectedCareer([]);
+    } else {
+      setSelectedCareer(careerArray.map((article) => article._id));
+    }
+  };
+
+  // Image file handler
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        image: file,
+        previewImage: URL.createObjectURL(file),
+      }));
+    }
+  };
+
+  // Form submit handler
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.title || !formData.description || !formData.image) {
+      alert("Please fill all fields!");
+      return;
+    }
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("image", formData.image);
+    try {
+      if (careerId) {
+        await updateCareer({ id: careerId, data: formDataToSend });
+        console.log("update successfully");
+      } else {
+        await addCareer(formDataToSend).unwrap();
+      }
+      // console.log('article submited', data);
+    } catch (error) {
+      console.log("Article not submit fail", error);
+    } finally {
+      handleOnclose();
+    }
+  };
+
+  //delete handler
+  const handleDelete = async (id) => {
+    try {
+      await deleteCareer(id).unwrap();
+      console.log("delete successfully");
+    } catch (error) {
+      console.log("Delete fail", error);
+    }
+  };
+
+  //handle edit
+  const handleEdit = (article) => {
+    const { _id, title = "", description = "", image = "" } = article;
+    setCareerId(_id);
+    setFormData({ title, description, image, previewImage: image });
+    setOpen();
+  };
+
+  const handleOnclose = () => {
+    setFormData({
+      title: "",
+      description: "",
+      image: null,
+      previewImage: null,
+    });
+    setCareerId(null);
+    setClose();
+  };
+
+  return (
+    <>
+      <div className="flex justify-between items-center my-3">
+        <h1 className="text-4xl font-semibold">Career</h1>
+        <div className="flex gap-2 items-center">
+          <button
+            className="bg-[var(--hover-btn)] text-white px-3 py-2 rounded-2xl"
+            onClick={setOpen}
+          >
+            <span className="text-xl">+</span> Add new article
+          </button>
+          <div className="bg-red-200 rounded" onClick={()=>handleDeleteSelectedArticle()}>
+            <RiDeleteBinLine color="red" style={{ margin: "5px" }} size={25} />
+          </div>
+        </div>
+      </div>
+      {/* update & add modal */}
+      <Modal isOpen={isOpen} onClose={handleOnclose} header={"Career"}>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="flex flex-col items-center space-y-3">
+            {/* Hidden file input */}
+            <input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+
+            {/* Camera icon and text as label */}
+            <label
+              htmlFor="image-upload"
+              className="flex flex-col items-center cursor-pointer text-blue-700 hover:text-blue-900"
+            >
+              <div className="text-4xl bg-gray-200 rounded-full">
+                <div className="p-8 ">
+                  <FiCamera color="black" />
+                </div>
+              </div>
+              <span className="mt-1 text-sm font-semibold">Upload Image</span>
+            </label>
+
+            {/* Image preview */}
+            {formData.previewImage && (
+              <img
+                src={formData.previewImage}
+                alt="Preview"
+                className="mt-2 w-32 h-32 object-cover rounded border"
+              />
+            )}
+          </div>
+
+          {/* Title */}
+          <div>
+            <label className="block font-medium mb-1">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+              placeholder="Enter title"
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block font-medium mb-1">Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+              placeholder="Enter description"
+              rows={3}
+            />
+          </div>
+
+          {/* Submit & Cancel */}
+          <div className="flex justify-center items-center">
+            <button
+              type="submit"
+              className="px-15 py-2 bg-[var(--hover-btn)] text-white rounded cursor-pointer"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Product Table */}
+      <div className="bg-gray-300 rounded-xl">
+        <table className="min-w-full border border-gray-300 divide-y divide-gray-200 rounded-xl overflow-hidden">
+          <thead className="bg-white shadow-xl border-b-3 border-gray-300">
+            <tr>
+              <th className="text-start w-[5%]">
+                <input
+                  type="checkbox"
+                  className="ml-4 w-4 h-4"
+                  checked={!isLoading && careerArray.length === selectedCareer.length}
+                  onChange={handleSelectAll}
+                />
+              </th>
+              <th className="text-left w-[5%] px-4 py-2">Image</th>
+              <th className="text-left w-[20%] px-4 py-2">Title</th>
+              <th className="text-left w-[50%] px-4 py-2">Description</th>
+              <th className="text-center w-[15%] px-4 py-2">Operations</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {careerArray.map((article) => (
+              <tr key={article._id} className="bg-white hover:bg-gray-50">
+                <td className="p-4">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4"
+                    checked={selectedCareer.includes(article._id)}
+                    onChange={()=>handleSelectDeselectArticle(article._id)}
+                  />
+                </td>
+                <td>
+                  <img
+                    src={article.image}
+                    alt=""
+                    className="w-16 h-16 rounded object-cover"
+                  />
+                </td>
+                <td className="px-4 py-2 font-medium text-gray-900">
+                  {article.title}
+                </td>
+                <td className="px-4 py-2">
+                  {article.description.length > 200
+                    ? article.description.slice(0, 120) + "..."
+                    : article.description}
+                </td>
+                <td className="px-4 py-2 text-cyan-600 hover:underline cursor-pointer">
+                  <button
+                    className="mx-1 bg-green-200 text-[var(--btn-edit-text)] px-3 py-1 rounded-lg"
+                    onClick={() => {
+                      handleEdit(article);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleDelete(article._id);
+                    }}
+                    className="mx-1 bg-red-200 text-[var(--btn-del-text)] px-2 py-1 rounded-xl"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={page}
+        limit={limit}
+        totalItems={totalArticles}
+        hasNextPage={hasNextPage}
+        hasPrevPage={hasPrevPage}
+        onPageChange={setPage}
+      />
+    </>
+  );
+}

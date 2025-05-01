@@ -34,7 +34,7 @@ import {
       label: "Career",
       Icon: HiBriefcase,
       subItems: [
-        { label: "Career", href: "#" },
+        { label: "Career", href: "career" },
         { label: "Career Openings", href: "#" },
         { label: "Career Opening Category", href: "#" },
       ],

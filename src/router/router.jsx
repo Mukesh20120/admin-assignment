@@ -6,6 +6,7 @@ import PageNotFound from "../pages/pageNotFound";
 import Dashboard from "../pages/Dashboard";
 import DashBoardArticle from "../components/DashBoardArticle";
 import AdminRoute from "./AdminRouter";
+import DashBoardCareer from "../components/DashBoardCareer";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,14 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <DashBoardArticle />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "career",
+        element: (
+          <AdminRoute>
+            <DashBoardCareer />
           </AdminRoute>
         ),
       },

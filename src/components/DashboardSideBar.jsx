@@ -1,7 +1,7 @@
 import { FaAngleDown, FaAngleUp } from "react-icons/fa6";
 import { useState } from "react";
 import SideBarLinkData from "../utils/SideBarLinkData";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export function DashBoardSideBar() {
   const [openDropdown, setOpenDropdown] = useState(null); // which parent dropdown is open
@@ -53,12 +53,12 @@ export function DashBoardSideBar() {
               {subItems.map((item) => (
                 <a
                   key={item.label}
-                  href={item.href}
                   onClick={(e) => {
                     e.preventDefault();
                     handleSubItemClick(label, item.label);
+                    navigate(item.href);
                   }}
-                  className={`block px-4 py-2 text-md hover:bg-gray-200 ${
+                  className={`block px-4 py-2 cursor-pointer text-md hover:bg-gray-200 ${
                     activeSubItem === item.label
                       ? "bg-gray-200 font-semibold"
                       : ""
