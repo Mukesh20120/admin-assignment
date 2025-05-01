@@ -8,6 +8,7 @@ import DashBoardArticle from "../components/DashBoardArticle";
 import AdminRoute from "./AdminRouter";
 import DashBoardCareer from "../components/DashBoardCareer";
 import DashBoardUserManagement from "../components/DashBoardUserManagement";
+import DashBoardJobs from "../components/DashBoardJobs";
 
 const router = createBrowserRouter([
   {
@@ -50,10 +51,14 @@ const router = createBrowserRouter([
           </AdminRoute>
         ),
       },
-      { path: "profile", element: <div>Profile</div> },
-      { path: "blog", element: <div>Profile</div> },
-      { path: "users", element: <div>Profile</div> },
-      { path: "setting", element: <div>Profile</div> },
+      {
+        path: "jobs",
+        element: (
+          <AdminRoute>
+           <DashBoardJobs/>
+          </AdminRoute>
+        ),
+      }
     ],
   },
   { path: "*", element: <PageNotFound /> },

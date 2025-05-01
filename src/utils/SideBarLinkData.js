@@ -70,7 +70,7 @@ import {
       Icon: HiBriefcase,
       subItems: [
         { label: "Service Category", href: "#" },
-        { label: "Jobs", href: "#" },
+        { label: "Jobs", href: "jobs" },
       ],
     },
     {
